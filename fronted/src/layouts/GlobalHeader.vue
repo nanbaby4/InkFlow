@@ -31,13 +31,25 @@
           🔑 登录
         </a-button>
 
-        <!-- 已登录：显示用户头像 -->
-        <a-avatar
-          v-else
-          :src="userStore.loginUser.userAvatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userStore.loginUser.userName || 'Felix'}`"
-          :size="40"
-          class="user-avatar"
-        />
+        <!-- 已登录：显示用户头像 + 悬浮下拉 -->
+        <a-dropdown v-else trigger="hover">
+          <a-avatar
+            :src="userStore.loginUser.userAvatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userStore.loginUser.userName || 'Felix'}`"
+            :size="40"
+            class="user-avatar"
+          />
+          <template #overlay>
+            <a-menu @click="handleMenuClick">
+              <a-menu-item key="profile">
+                <span>👤 个人中心</span>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="logout">
+                <span style="color: #e74c3c">🚪 退出登录</span>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </a-col>
     </a-row>
   </div>
@@ -46,6 +58,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { message } from 'ant-design-vue';
 import { useUserStore } from '@/stores/user.js';
 
 const router = useRouter();
@@ -63,6 +76,17 @@ const toggleTheme = () => {
   isDark.value = !isDark.value;
   const newTheme = isDark.value ? 'dark' : 'light';
   window.dispatchEvent(new CustomEvent('theme-change', { detail: newTheme }));
+};
+
+const handleMenuClick = async ({ key }) => {
+  if (key === 'logout') {
+    await userStore.logout();
+    message.success('👋 已退出，期待下次灵感碰撞！');
+    router.push('/');
+  } else if (key === 'profile') {
+    // TODO: 跳转个人中心页
+    message.info('个人中心开发中...');
+  }
 };
 </script>
 

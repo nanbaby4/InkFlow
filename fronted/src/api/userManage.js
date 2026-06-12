@@ -12,3 +12,9 @@ export async function getLoginUser() {
     method: 'GET',
   })
 }
+
+export async function userLogout() {
+  return request('/user/logout', {
+    method: 'POST',
+  })
+}

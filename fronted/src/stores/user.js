@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getLoginUser } from '@/api/userManage.js'
+import { getLoginUser, userLogout } from '@/api/userManage.js'
 
 export const useUserStore = defineStore('user', () => {
   const loginUser = ref({ id: 0, userName: '未登录' })
@@ -24,7 +24,18 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { loginUser, fetchLoginUser }
+  // 退出登录
+  async function logout() {
+    try {
+      await userLogout()
+    } catch (err) {
+      console.error('[logout] 退出登录请求失败:', err)
+    } finally {
+      loginUser.value = { id: 0, userName: '未登录' }
+    }
+  }
+
+  return { loginUser, fetchLoginUser, logout }
 })
 
 // 用户角色
