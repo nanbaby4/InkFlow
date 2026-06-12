@@ -2,6 +2,7 @@
 
 from typing import Optional
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 from app.schemas.common import PageRequest
 
@@ -77,8 +78,8 @@ class LoginUserVO(BaseModel):
     user_avatar: Optional[str] = Field(None, alias="userAvatar")
     user_profile: Optional[str] = Field(None, alias="userProfile")
     user_role: str = Field(..., alias="userRole")
-    create_time: str = Field(..., alias="createTime")
-    update_time: str = Field(..., alias="updateTime")
+    create_time: datetime  = Field(..., alias="createTime")
+    update_time: datetime  = Field(..., alias="updateTime")
     
     class Config:
         populate_by_name = True

@@ -7,16 +7,20 @@ export const useUserStore = defineStore('user', () => {
 
   // 远程获取登录信息
   async function fetchLoginUser() {
-    console.log('fetchLoginUser')
+    console.log('[fetchLoginUser] 开始获取登录用户信息...')
     try {
       const res = await getLoginUser()
+      console.log('[fetchLoginUser] 响应:', res.data)
       if (res.data.code === 0 && res.data.data) {
         loginUser.value = res.data.data
+        console.log('[fetchLoginUser] ✅ 已登录:', loginUser.value.userName)
       } else {
-        loginUser.value = { id: 0 }
+        console.warn('[fetchLoginUser] ❌ 未登录, code:', res.data.code)
+        loginUser.value = { id: 0, userName: '未登录' }
       }
     } catch (err) {
-      loginUser.value = { id: 0 }
+      console.error('[fetchLoginUser] 请求异常:', err)
+      loginUser.value = { id: 0, userName: '未登录' }
     }
   }
 

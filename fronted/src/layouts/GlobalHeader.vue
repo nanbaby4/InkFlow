@@ -34,7 +34,7 @@
         <!-- 已登录：显示用户头像 -->
         <a-avatar
           v-else
-          :src="userStore.loginUser.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userStore.loginUser.userName || 'Felix'}`"
+          :src="userStore.loginUser.userAvatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userStore.loginUser.userName || 'Felix'}`"
           :size="40"
           class="user-avatar"
         />
@@ -53,8 +53,10 @@ const userStore = useUserStore();
 const selectedKeys = ref(['/']);
 const isDark = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   isDark.value = localStorage.getItem('theme') === 'dark';
+  // 主动获取登录用户信息，不依赖路由守卫的调用时机
+  await userStore.fetchLoginUser();
 });
 
 const toggleTheme = () => {
