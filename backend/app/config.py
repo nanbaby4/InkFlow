@@ -33,6 +33,20 @@ class Settings(BaseSettings):
     
     # 密码加密盐值
     password_salt: str
+
+    # AI 配置
+    dashscope_api_key: str
+    dashscope_model: str = "qwen-plus"
+
+    # Pexels 图片搜索
+    pexels_api_key: str
+
+    # 腾讯云 COS
+    tencent_cos_secret_id: str
+    tencent_cos_secret_key: str
+    tencent_cos_region: str
+    tencent_cos_bucket: str
+    tencent_cos_domain: str = ""
     
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
