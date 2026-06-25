@@ -2,8 +2,21 @@
 
 import redis.asyncio as redis
 import json
+from datetime import datetime, date
+from decimal import Decimal
 from typing import Optional, Any
 from app.config import settings
+
+
+class SessionJSONEncoder(json.JSONEncoder):
+    """Custom JSON encoder that handles common non-serializable types."""
+
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super().default(obj)
 
 # Redis 连接池
 redis_client: Optional[redis.Redis] = None
@@ -55,7 +68,7 @@ async def set_session(session_id: str, data: dict, expire: Optional[int] = None)
     await redis_client.setex(
         key,
         expire_time,
-        json.dumps(data)
+        json.dumps(data, cls=SessionJSONEncoder)
     )
 
 

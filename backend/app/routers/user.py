@@ -34,7 +34,7 @@ async def login(
     login_user = await service.login(request)
 
     session_id = uuid.uuid4().hex
-    await set_session(session_id, {"id": login_user.id, "userRole": login_user.user_role})
+    await set_session(session_id, login_user.model_dump(by_alias=True, mode="json"))
 
     response.set_cookie(
         key=SESSION_COOKIE_KEY,

@@ -23,10 +23,10 @@ async def get_current_user(
         return None
     
     session_data = await get_session(session_id)
-    if not session_data or "user" not in session_data:
+    if not session_data:
         return None
     
-    user_data = session_data["user"]
+    user_data = session_data
     return LoginUserVO(**user_data)
 
 

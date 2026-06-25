@@ -10,7 +10,7 @@ from app.database import database
 from app.routers import user_router, health_router, article_router
 from app.exceptions import BusinessException, ErrorCode
 from app.utils.session import close_redis, init_redis
-# from app.utils.session import init_redis, close_redis
+from scalar_fastapi import get_scalar_api_reference
 
 
 @asynccontextmanager
@@ -36,6 +36,13 @@ app = FastAPI(
     version="0.0.1",
     lifespan=lifespan
 )
+
+@app.get("/scalar", include_in_schema=False)
+async def scalar_html():
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url,
+        title=app.title,
+    )
 
 # CORS 配置
 app.add_middleware(
