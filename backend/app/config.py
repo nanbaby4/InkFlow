@@ -47,6 +47,11 @@ class Settings(BaseSettings):
     tencent_cos_region: str
     tencent_cos_bucket: str
     tencent_cos_domain: str = ""
+
+    # LangSmith 追踪
+    langsmith_api_key: str = ""
+    langsmith_tracing: bool = False
+    langsmith_project: str = "InkFlow"
     
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
@@ -69,3 +74,9 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# ── 将 LangSmith 配置注入到 os.environ，供 LangChain/LangGraph 自动追踪使用 ──
+if settings.langsmith_tracing and settings.langsmith_api_key:
+    os.environ["LANGSMITH_API_KEY"] = settings.langsmith_api_key
+    os.environ["LANGSMITH_TRACING"] = "true"
+    os.environ["LANGSMITH_PROJECT"] = settings.langsmith_project

@@ -24,6 +24,8 @@ dependencies = [
     "cos-python-sdk-v5==1.9.32",
     "langgraph>=1.2.0,<2.0.0",
     "langchain-core>=1.4.0,<2.0.0",
+    "langsmith>=0.3.0",
+    "scalar-fastapi>=1.8.0",
 ]
 
 [build-system]
