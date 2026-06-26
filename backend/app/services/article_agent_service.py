@@ -151,12 +151,19 @@ class ArticleAgentService:
     # ── 条件路由：配图分发 ──────────────────────────────────────
     @staticmethod
     def _route_to_images(state: GraphState):
-        """无配图需求直接到 merge，有则 Send 并行分发"""
+        """无配图需求直接到 merge，有则 Send 并行分发
+
+        Send 只传递显式指定的字段，不会自动合并父状态，
+        所以需要同时传入 image_requirements 供目标节点使用。
+        """
         requirements = state.get("image_requirements") or []
         if not requirements:
             return ["node_merge"]
         return [
-            Send("node_generate_single_image", {"image_index": i}) ## Send是一个异步分发指令
+            Send("node_generate_single_image", {
+                "image_index": i,
+                "image_requirements": requirements,
+            })
             for i in range(len(requirements))
         ]
 
