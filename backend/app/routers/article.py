@@ -133,8 +133,8 @@ async def generate_article(
 
     async def event_generator():
         """SSE 异步生成器"""
-        # 发一条 START
-        yield _sse_frame("START")
+        # 发一条 START，携带 taskId
+        yield _sse_frame("START", json.dumps({"taskId": task_id}))
 
         # 后台执行生成
         task = asyncio.create_task(

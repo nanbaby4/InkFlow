@@ -51,6 +51,7 @@ app.add_middleware(
     allow_credentials=True,  # 允许跨域请求携带cookie
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Task-Id"],  # 允许前端读取自定义响应头
 )
 
 

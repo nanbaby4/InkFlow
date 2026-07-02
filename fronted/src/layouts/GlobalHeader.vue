@@ -7,7 +7,7 @@
       </a-col>
 
       <a-col flex="auto">
-        <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" class="cute-menu">
+        <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" class="cute-menu" @click="handleNavClick">
           <a-menu-item key="/">🏠 灵感森林</a-menu-item>
           <a-menu-item key="/create">🎨 创作实验室</a-menu-item>
           <a-menu-item key="/gallery">🌈 墨迹画廊</a-menu-item>
@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <a-button type="primary" class="magic-btn">
+        <a-button type="primary" class="magic-btn" @click="router.push('/create')">
           ✨ 帮我写个爆款
         </a-button>
 
@@ -56,12 +56,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useUserStore } from '@/stores/user.js';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const selectedKeys = ref(['/']);
 const isDark = ref(false);
@@ -72,10 +73,25 @@ onMounted(async () => {
   await userStore.fetchLoginUser();
 });
 
+// 同步菜单高亮到当前路由
+watch(
+  () => route.path,
+  (path) => {
+    if (path === '/') selectedKeys.value = ['/']
+    else if (path.startsWith('/create')) selectedKeys.value = ['/create']
+    else if (path.startsWith('/gallery')) selectedKeys.value = ['/gallery']
+  },
+  { immediate: true },
+)
+
 const toggleTheme = () => {
   isDark.value = !isDark.value;
   const newTheme = isDark.value ? 'dark' : 'light';
   window.dispatchEvent(new CustomEvent('theme-change', { detail: newTheme }));
+};
+
+const handleNavClick = ({ key }) => {
+  router.push(key)
 };
 
 const handleMenuClick = async ({ key }) => {

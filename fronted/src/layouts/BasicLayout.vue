@@ -3,7 +3,7 @@
 
     <GlobalHeader />
 
-    <a-layout-content class="main-content">
+    <a-layout-content class="main-content" :class="{ 'full-width': route.path === '/create' }">
       <!-- 路由切换动画 -->
       <router-view v-slot="{ Component }">
         <transition name="fade-slide" mode="out-in">
@@ -12,14 +12,17 @@
       </router-view>
     </a-layout-content>
 
-    <GlobalFooter />
+    <GlobalFooter v-if="route.path !== '/create'" />
 
   </a-layout>
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
 import GlobalHeader from './GlobalHeader.vue';
 import GlobalFooter from './GlobalFooter.vue';
+
+const route = useRoute()
 </script>
 
 <style scoped>
@@ -36,6 +39,11 @@ import GlobalFooter from './GlobalFooter.vue';
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+}
+
+.main-content.full-width {
+  max-width: none;
+  padding: 0;
 }
 
 /* 可爱的切页动画 */

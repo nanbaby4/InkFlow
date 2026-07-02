@@ -14,6 +14,11 @@ const routes = [
         name: '灵感森林',
         component: () => import('@/views/HomeView.vue'),
       },
+      {
+        path: 'create',
+        name: '创作实验室',
+        component: () => import('@/views/creation/CreateLabView.vue'),
+      },
     ],
   },
   {
