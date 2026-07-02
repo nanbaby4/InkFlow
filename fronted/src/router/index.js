@@ -19,6 +19,11 @@ const routes = [
         name: '创作实验室',
         component: () => import('@/views/creation/CreateLabView.vue'),
       },
+      {
+        path: 'gallery',
+        name: '墨迹画廊',
+        component: () => import('@/views/gallery/GalleryView.vue'),
+      },
     ],
   },
   {

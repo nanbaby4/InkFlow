@@ -3,7 +3,7 @@
 
     <GlobalHeader />
 
-    <a-layout-content class="main-content" :class="{ 'full-width': route.path === '/create' }">
+    <a-layout-content class="main-content" :class="{ 'full-width': route.path === '/create' || route.path === '/gallery' }">
       <!-- 路由切换动画 -->
       <router-view v-slot="{ Component }">
         <transition name="fade-slide" mode="out-in">
@@ -12,7 +12,7 @@
       </router-view>
     </a-layout-content>
 
-    <GlobalFooter v-if="route.path !== '/create'" />
+    <GlobalFooter v-if="route.path !== '/create' && route.path !== '/gallery'" />
 
   </a-layout>
 </template>
