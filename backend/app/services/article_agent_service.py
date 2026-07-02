@@ -43,8 +43,9 @@ STYLE_PROMPT_MAP = {
     "humorous": PromptConstant.STYLE_HUMOROUS_PROMPT,
 }
 
-IMAGE_PLACEHOLDER_RE = re.compile(r"\{\{IMAGE_PLACEHOLDER_(\d+)\}\}")
-ICON_PLACEHOLDER_RE = re.compile(r"\{\{ICON_PLACEHOLDER_(\d+)\}\}")
+# 兼容单花括号和双花括号的占位符格式
+IMAGE_PLACEHOLDER_RE = re.compile(r"\{+\s*IMAGE_PLACEHOLDER_(\d+)\s*\}+")
+ICON_PLACEHOLDER_RE = re.compile(r"\{+\s*ICON_PLACEHOLDER_(\d+)\s*\}+")
 
 
 # ── LangGraph 状态定义 ────────────────────────────────────────
@@ -494,12 +495,12 @@ class ArticleAgentService:
                     placeholder_map[placeholder_id] = ImageResult(**img_dict)
                     break
 
-        # 兜底映射：基于 position 构造占位符
+        # 兜底映射：基于 position 构造占位符（单花括号，匹配 LLM 实际输出格式）
         for img_dict in images:
             img = ImageResult(**img_dict)
             if img.position > 1 and img.url:
-                placeholder_map[f"{{{{IMAGE_PLACEHOLDER_{img.position - 1}}}}}"] = img
-                placeholder_map[f"{{{{ICON_PLACEHOLDER_{img.position - 1}}}}}"] = img
+                placeholder_map[f"{{IMAGE_PLACEHOLDER_{img.position - 1}}}"] = img
+                placeholder_map[f"{{ICON_PLACEHOLDER_{img.position - 1}}}"] = img
 
         # 3. 替换占位符
         def _replace_placeholder(match: re.Match) -> str:
